@@ -97,7 +97,11 @@ def call_model(prompt):
     raw = http(API, data=body, timeout=180, headers={
         "Authorization": f"Bearer {token}", "Content-Type": "application/json",
         "Accept": "application/vnd.github+json"})
-    return json.loads(json.loads(raw)["choices"][0]["message"]["content"])
+    try:
+        return json.loads(json.loads(raw)["choices"][0]["message"]["content"])
+    except ValueError:
+        print("모델 응답 이상:", raw[:300])
+        raise
 
 
 def s_list(v, n_min, n_max, limit=140):
